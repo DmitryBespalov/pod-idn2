@@ -23,6 +23,7 @@ Libidn2 is believed to be a complete IDNA2008 and TR46 implementation, it contai
   spec.prepare_command = "./build_idn2.sh"
   spec.preserve_paths = "idn2", "unistring"
   spec.header_dir = "idn2"
+  spec.source_files = "idn2/include/*.h"
   spec.public_header_files = "idn2/include/*.h"
   spec.module_map = "idn2/include/module.modulemap"
   spec.vendored_libraries = "unistring/lib/libunistring.a", "idn2/lib/libidn2.a"
