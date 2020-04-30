@@ -20,12 +20,11 @@ Libidn2 is believed to be a complete IDNA2008 and TR46 implementation, it contai
   }
   spec.platform     = :ios, "9.0"
   spec.source       = { :git => "https://github.com/DmitryBespalov/pod-idn2.git", :branch => "master" }
-  spec.prepare_command = "./build_idn2.sh"
   spec.preserve_paths = "idn2", "unistring"
-  spec.header_dir = "idn2"
-  spec.source_files = "idn2/include/*"
-  spec.public_header_files = "idn2/include/*.h", "idn2/include/module.modulemap"
+  spec.source_files = "idn2/include/idn2.h"
+  spec.public_header_files = "idn2/include/idn2.h"
   spec.module_map = "idn2/include/module.modulemap"
+  spec.xcconfig = {'HEADER_SEARCH_PATHS' => '$(SRCROOT)/Pods/idn2/idn2/include'}
   spec.vendored_libraries = "unistring/lib/libunistring.a", "idn2/lib/libidn2.a"
-  spec.libraries = "unistring", "idn2"
+  spec.libraries = "idn2"
 end
