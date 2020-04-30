@@ -1,5 +1,5 @@
 Pod::Spec.new do |spec|
-  spec.name         = "idn2"
+  spec.name         = "idn2Swift"
   spec.version      = "0.0.1"
   spec.summary      = "This spec provides you with the iOS build of the Libidn2."
   spec.description  = <<-DESC
@@ -20,11 +20,20 @@ Libidn2 is believed to be a complete IDNA2008 and TR46 implementation, it contai
   }
   spec.platform     = :ios, "9.0"
   spec.source       = { :git => "https://github.com/DmitryBespalov/pod-idn2.git", :branch => "master" }
+  spec.source_files = "idn2/include/idn2.h", "Source/IDN.swift"
   spec.preserve_paths = "idn2", "unistring"
-  spec.source_files = "idn2/include/idn2.h"
   spec.public_header_files = "idn2/include/idn2.h"
-  spec.module_map = "idn2/include/module.modulemap"
   spec.xcconfig = {'HEADER_SEARCH_PATHS' => '"$(SRCROOT)/Pods/idn2/idn2/include"'}
   spec.vendored_libraries = "unistring/lib/libunistring.a", "idn2/lib/libidn2.a"
-  spec.libraries = "idn2"
+  spec.libraries = "idn2", "iconv"
+
+  spec.static_framework = true
+  
+  spec.resource_bundles = {
+    'idn2SwiftResources' => ['Resources/**/*']
+  }
+
+  spec.test_spec 'Tests' do |test_spec|
+    test_spec.source_files = 'Tests/IDNTests.swift'
+  end
 end
