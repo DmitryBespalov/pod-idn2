@@ -133,8 +133,8 @@ module idn2 {
     $INCLUDED_FILES
 
     export *
-    link iconv
-    link unistring
+    link "iconv"
+    link "unistring"
 }
 
 EOF
