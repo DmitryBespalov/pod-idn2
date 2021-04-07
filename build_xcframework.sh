@@ -8,6 +8,7 @@ clean_all() {
     rm -rf .build
 }
 
+# main function
 build_xcframework() {
     build_idn2 iPhoneSimulator i386 i686-apple-darwin
     build_idn2 iPhoneSimulator x86_64 x86_64-apple-darwin
@@ -19,6 +20,13 @@ build_xcframework() {
     create_xcframework idn2
 }
 
+# Creates xcframework from libraries for different iOS platforms
+#
+# requires: 
+#   - library and header files exist for 5 different platforms
+# 
+# arguments:
+#   - name: the first argument is the name of the library
 create_xcframework() {
     NAME=$1
     LIBNAME=lib${NAME}.a
@@ -56,6 +64,8 @@ create_xcframework() {
         -output ${NAME}.xcframework
 }
 
+# Builds idn2 library for a given combination of SDK, ARCH, and HOST arguments.
+# Also builds unistring with the same combination.
 build_idn2() {
     ### parse arguments
     SDK=$1
@@ -131,6 +141,7 @@ EOF
     popd
 }
 
+# Builds a unistring library for a combination of SDK, ARCH and HOST
 build_unistring() {
     ### parse arguments
     SDK=$1
