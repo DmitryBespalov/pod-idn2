@@ -3,7 +3,7 @@
 //
 
 import Foundation
-import idn2Swift
+import idn2
 
 // see https://unicode.org/reports/tr46/
 // see https://libidn.gitlab.io/libidn2/manual/libidn2.html

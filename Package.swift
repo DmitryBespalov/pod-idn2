@@ -25,15 +25,13 @@ let package = Package(
         .target(
             name: "idn2Swift",
             dependencies: ["unistring", "idn2"],
-            sources: ["Source"],
             resources: [
                 .process("Resources")
             ]
         ),
         .testTarget(
             name: "idn2SwiftTests",
-            dependencies: ["idn2Swift"],
-            sources: ["Tests"]
+            dependencies: ["idn2Swift"]
         )
     ]
 )
