@@ -10,7 +10,7 @@ clean_all() {
 
 # main function
 build_xcframework() {
-    build_idn2 iPhoneSimulator arm64 arm-apple-darwin
+    build_idn2 iPhoneSimulator arm64 arm64-apple-macos11
     build_idn2 iPhoneSimulator i386 i686-apple-darwin
     build_idn2 iPhoneSimulator x86_64 x86_64-apple-darwin
     build_idn2 iPhoneOS armv7 arm-apple-darwin
@@ -48,9 +48,9 @@ create_xcframework() {
     rm -rf .build/iPhoneSimulator/${NAME}/lib
     mkdir -p .build/iPhoneSimulator/${NAME}/lib
     lipo -create \
+        .build/iPhoneSimulator/arm64/arm64-apple-macos11/${NAME}/lib/${LIBNAME} \
         .build/iPhoneSimulator/i386/i686-apple-darwin/${NAME}/lib/${LIBNAME} \
         .build/iPhoneSimulator/x86_64/x86_64-apple-darwin/${NAME}/lib/${LIBNAME} \
-        .build/iPhoneSimulator/arm64/arm-apple-darwin/${NAME}/lib/${LIBNAME} \
         -output \
         .build/iPhoneSimulator/${NAME}/lib/${LIBNAME}
 
@@ -104,7 +104,13 @@ build_idn2() {
     export PREFIX="${BUILD_DIR}/idn2"
     mkdir -p "${PREFIX}"
 
-    COMMON_FLAGS="-arch ${ARCH} -isysroot ${SDKROOT} -mios-version-min=${VERSION_MIN} -fembed-bitcode"
+    if [ "$SDK" == "iPhoneSimulator" ]; then 
+      MIN_VER="ios-simulator-version-min"
+    else
+      MIN_VER="ios-version-min"
+    fi
+
+    COMMON_FLAGS="-arch ${ARCH} -isysroot ${SDKROOT} -m${MIN_VER}=${VERSION_MIN} -fembed-bitcode"
 
     export CPPFLAGS="-I${PREFIX}/include ${COMMON_FLAGS} -I${SDKROOT}/usr/include -O2 -g -Wno-error=tautological-compare -I${BUILD_DIR}/unistring/include"
 
@@ -179,8 +185,14 @@ build_unistring() {
     export PREFIX="${BUILD_DIR}/unistring"
     
     mkdir -p "${PREFIX}"
+
+    if [ "$SDK" == "iPhoneSimulator" ]; then 
+      MIN_VER="ios-simulator-version-min"
+    else
+      MIN_VER="ios-version-min"
+    fi
     
-    COMMON_FLAGS="-arch ${ARCH} -isysroot ${SDKROOT} -mios-version-min=${VERSION_MIN} -fembed-bitcode"
+    COMMON_FLAGS="-arch ${ARCH} -isysroot ${SDKROOT} -m${MIN_VER}=${VERSION_MIN} -fembed-bitcode"
 
     export CPPFLAGS="-I${PREFIX}/include ${COMMON_FLAGS} -I${SDKROOT}/usr/include -O2 -g -Wno-error=tautological-compare"
 
