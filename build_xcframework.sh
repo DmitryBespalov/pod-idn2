@@ -10,6 +10,7 @@ clean_all() {
 
 # main function
 build_xcframework() {
+    build_idn2 iPhoneSimulator arm64 arm-apple-darwin
     build_idn2 iPhoneSimulator i386 i686-apple-darwin
     build_idn2 iPhoneSimulator x86_64 x86_64-apple-darwin
     build_idn2 iPhoneOS armv7 arm-apple-darwin
@@ -49,6 +50,7 @@ create_xcframework() {
     lipo -create \
         .build/iPhoneSimulator/i386/i686-apple-darwin/${NAME}/lib/${LIBNAME} \
         .build/iPhoneSimulator/x86_64/x86_64-apple-darwin/${NAME}/lib/${LIBNAME} \
+        .build/iPhoneSimulator/arm64/arm-apple-darwin/${NAME}/lib/${LIBNAME} \
         -output \
         .build/iPhoneSimulator/${NAME}/lib/${LIBNAME}
 
