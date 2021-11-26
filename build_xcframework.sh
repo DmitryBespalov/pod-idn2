@@ -56,6 +56,7 @@ create_xcframework() {
 
     # create a xcframework for one library. Multiple libraries in the same
     # framework are not supported.
+    rm -rf ${NAME}.xcframework
     xcodebuild -create-xcframework \
         -library .build/iPhoneOS/${NAME}/lib/${LIBNAME} \
         -headers .build/iPhoneOS/armv7s/arm-apple-darwin/${NAME}/include \
@@ -75,6 +76,8 @@ build_idn2() {
     HOST=$3
 
     build_unistring "${SDK}" "${ARCH}" "${HOST}"
+
+    echo "Building idn2"
 
     ### make build dir
     BUILD_DIR="$(pwd)/.build/${SDK}/${ARCH}/${HOST}"
@@ -116,10 +119,19 @@ build_idn2() {
 
     export LDFLAGS="-L$(pwd)/lib ${COMMON_FLAGS} -L${SDKROOT}/usr/lib -Wno-error=unused-command-line-argument -L${BUILD_DIR}/unistring/lib -lunistring"
 
+    # autoconf fails if we specify the apple M1 as a target
+    # so we change it to something it recognizes.
+    # see https://github.com/tpoechtrager/cctools-port/issues/6
+    if [ "$HOST" == "arm64-apple-macos11" ]; then
+        HOST_ADJUSTED="arm-apple-darwin"
+    else
+        HOST_ADJUSTED="$HOST"
+    fi
+
     ### run configure
     ./configure \
         --prefix="${PREFIX}" \
-        --host=${HOST} \
+        --host=${HOST_ADJUSTED} \
         --disable-shared \
         --disable-dependency-tracking \
         --disable-doc \
@@ -151,6 +163,8 @@ EOF
 
 # Builds a unistring library for a combination of SDK, ARCH and HOST
 build_unistring() {
+    echo "Building unistring"
+
     ### parse arguments
     SDK=$1
     ARCH=$2
@@ -186,6 +200,9 @@ build_unistring() {
     
     mkdir -p "${PREFIX}"
 
+    # Linking fails for simulator if we don't specify platform specific flag 
+    # because if using 'ios-version-min' then the linker uses 
+    # iPhoneOS platform for some reason. Changing this flag removes this issue.
     if [ "$SDK" == "iPhoneSimulator" ]; then 
       MIN_VER="ios-simulator-version-min"
     else
