@@ -4,6 +4,9 @@ set -ex
 DEVELOPER_DIR="$(xcode-select -p)"
 VERSION_MIN="9.0"
 
+# fixes linker error with "_rpl_malloc" not defined
+export ac_cv_func_realloc_0_nonnull=yes
+
 clean_all() {
     rm -rf .build
 }
