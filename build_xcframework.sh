@@ -132,13 +132,16 @@ build_idn2() {
     fi
 
     ### run configure
-    ./configure \
+    # https://www.linuxquestions.org/questions/linux-software-2/undefined-reference-to-%60rpl_malloc%27-587256/
+    # (undefined 'rlp_malloc' issue)
+    ac_cv_func_malloc_0_nonnull=yes ./configure \
         --prefix="${PREFIX}" \
         --host=${HOST_ADJUSTED} \
         --disable-shared \
         --disable-dependency-tracking \
         --disable-doc \
-        --with-libunistring-prefix="${BUILD_DIR}/unistring"
+        --with-libunistring-prefix="${BUILD_DIR}/unistring" \
+        --with-gnu-ld
     
     ### compile
     make -j 10
@@ -219,10 +222,13 @@ build_unistring() {
     export LDFLAGS="-L$(pwd)/lib ${COMMON_FLAGS} -L${SDKROOT}/usr/lib -Wno-error=unused-command-line-argument"
 
     ### run configure
-    ./configure \
+    # https://www.linuxquestions.org/questions/linux-software-2/undefined-reference-to-%60rpl_malloc%27-587256/
+    # (undefined 'rlp_malloc' issue)
+    ac_cv_func_malloc_0_nonnull=yes ./configure \
             --prefix="${PREFIX}" \
             --host=${HOST} \
-            --disable-shared
+            --disable-shared \
+            --with-gnu-ld
     ### make
     make -j 10
     ### make install
